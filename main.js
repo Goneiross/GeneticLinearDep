@@ -71,7 +71,11 @@ class units{
   }
 
   eugenisme(){
-
+    this.sort();
+    for (let u = this.nbUnits / 2; u < this.nbUnits; u ++){//BE MORE GENERAL
+      this.map.pop();
+    }
+    this.nbUnits /= 2;
   }
 
   deces(randNumber){
