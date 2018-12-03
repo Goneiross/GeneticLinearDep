@@ -24,7 +24,12 @@ class units{
     }
     this.objective = objective;
   }
-  get mark(){ //MAYBE BETTER DOING ORTH PROJ BEFORE
+
+  randIni(vectorNumber){ // Toute la convergence ou non viendra d'ici
+
+  }
+
+  mark(){ //MAYBE BETTER DOING ORTH PROJ BEFORE
     for (let unit = 0; unit < this.nbUnits; unit++){
       let tmpMark = 0;
       for (let v = 0; v < nbVectors; v++){
@@ -33,20 +38,22 @@ class units{
       this.mark[unit] = tmpMark;
     }
   }
-  get randIni(){
-  }
 
   get selection(){
 
   }
 
-  get eugenisme(){
+  eugenisme(){
   }
 
-  get deces(){
+  deces(randNumber){
+    for (let r = 0; r < randNumber; r++){
+      let rand = Math.random() * this.nbUnits;
+      this.randIni(rand);
+    }
   }
 
-  get reproduction(){
+  reproduction(){
   }
 
 }
@@ -56,20 +63,22 @@ class units{
  * @param {number} nbUnits 
  * @return best combination
  */
-function main(nbUnits, time, vector) {
+function main(nbUnits, time, vector, randNumber) {
 
   let units = new units(nbUnits, nbVectors, vector);
   let solution = new Array();
-  for (let i = 0; i < nbVectors; i++){
-    solution[i]=0;
+  for (let v = 0; v < nbVectors; v++){
+    solution[v]=0;
   }
   let bestMarkPerYear = new Array();
   for (let i = 0; i < time; i++){
     bestMarkPerYear[i]=0;
   }
 
-  units.randIni()
-
+  for (let v = 0; v < nbVectors; v++){
+    units.randIni(v);
+  }
+  
   for (let year = 0; year < time; year++){
     units.mark();
     let nextUnits = new units(nbUnits, nbVectors, vector);
@@ -80,7 +89,7 @@ function main(nbUnits, time, vector) {
     }
     nextUnits.mark();
     units.eugenisme(nextUnits);
-    units.deces();
+    units.deces(randNumber);
 
     let tmp = units.mark[0];
     let tmp2 = 0;
