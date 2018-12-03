@@ -1,10 +1,11 @@
 /** ------ Description -------
  *  CLASS UNIT :
+ *    var :
  *      nbUnits
  *      mark[unitNumber]
  *      map[unitNumber][Vector]
- *  MARK :
- *      || V' - V ||
+ *    function :
+ *      mark : || V' - V ||
  */
 
 class units{
@@ -52,6 +53,15 @@ class units{
 function main(nbUnits, time) {
 
   let units = new units(nbUnits, nbVectors);
+  let solution = new Array();
+  for (let i = 0; i < nbVectors; i++){
+    solution[i]=0;
+  }
+  let bestMarkPerYear = new Array();
+  for (let i = 0; i < time; i++){
+    bestMarkPerYear[i]=0;
+  }
+
   units.randIni()
 
   for (let year = 0; year < time; year++){
@@ -65,8 +75,21 @@ function main(nbUnits, time) {
     nextUnits.mark();
     units.eugenisme(nextUnits);
     units.deces();
-  }
 
+    let tmp = units.mark[0];
+    let tmp2 = 0;
+    for (let u = 0; u < nbunits, Units; u++){
+      if (tmp < units.mark[i]){
+        tmp = units.mark[i];
+        tmp2 = i;
+      }
+    }
+    bestMarkPerYear[year] = tmp;
+    for (let i = 0; i < nbVectors; i++){
+      solution[i]= units.map[tmp2][i];
+    }
+
+  }
   return(solution);
 }
 
