@@ -11,6 +11,7 @@
 class units{
   constructor(nbUnits, nbVectors, objective){
     this.nbUnits = nbUnits;
+    this.nbVectors = nbVectors;
     this.mark = new Array();
     for (let i = 0; i < nbUnits; i++){
       this.mark[i] = 0;
@@ -18,7 +19,7 @@ class units{
     this.map = new Array();
     for (let i = 0; i < nbUnits; i++){
       this.map[i] = new Array();
-      for (let j = 0; j < nbVectors; j++){
+      for (let j = 0; j < this.nbVectors; j++){
         this.map[i][j] = 0;
       }
     }
@@ -26,7 +27,7 @@ class units{
   }
 
   sort(){
-    
+
   }
 
   randIni(vectorNumber){ // Toute la convergence ou non viendra d'ici
@@ -36,7 +37,7 @@ class units{
   mark(){ //MAYBE BETTER DOING ORTH PROJ BEFORE
     for (let unit = 0; unit < this.nbUnits; unit++){
       let tmpMark = 0;
-      for (let v = 0; v < nbVectors; v++){
+      for (let v = 0; v < this.nbVectors; v++){
         tmpMark += Math.abs(objective[v] - this.map[unit][v]); //AND WHEN NEGATIVE ????
       }
       this.mark[unit] = tmpMark;
@@ -45,7 +46,7 @@ class units{
 
   get selection(){
     let sum = 0;
-    for (let v = 0; v < nbVectors; v++){
+    for (let v = 0; v < this.nbVectors; v++){
       sum += this.mark[v];
     }
     let selected = -1;
@@ -68,7 +69,16 @@ class units{
     }
   }
 
-  reproduction(){
+  reproduction(father, mother, u){
+
+    let tmpVector = new Array();
+
+    // Compute tmpVector
+
+    this.mark[u]=0;
+    for (let v = 0; v < nbVectors; v++){
+      this.map[u][v] = tmpVector[v];
+    }
   }
 
 }
@@ -100,7 +110,7 @@ function main(nbUnits, time, vector, randNumber) {
     for (let u = 0; u < nbunits, Units; u++){
       let father = selection(units);
       let mother = selection(units);
-      nextUnits.reproduction(father, mother, c);
+      nextUnits.reproduction(father, mother, u);
     }
     nextUnits.mark();
     units.eugenisme(nextUnits);
