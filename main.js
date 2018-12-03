@@ -1,17 +1,35 @@
 /** ------ Description -------
- *  UNITS :
- *      [X]       -- > unit number
- *      [ ][X]    -- > |0 := mark| |1 := map|
- *      [ ][1][X] -- > vector iteration
+ *  CLASS UNIT :
+ *      nbUnits
+ *      mark[unitNumber]
+ *      map[unitNumber][Vector]
  *  MARK :
  *      || V' - V ||
  */
 
-function ini() {
-
+class units{
+  constructor(nbUnits, nbVectors){
+    this.nbUnits = nbUnits;
+    this.mark = new Array();
+    for (let i = 0; i < nbUnits; i++){
+      this.mark[i] = 0;
+    }
+    this.map = new Array();
+    for (let i = 0; i < nbUnits; i++){
+      this.map[i] = new Array();
+      for (let j = 0; j < nbVectors; j++){
+        this.map[i][j] = 0;
+      }
+    }
+    
+  }
+  get mark(){
+    // Compute mark for each unit
+  }
 }
 
-function evaluation() {
+
+function ini() {
 
 }
 
@@ -31,7 +49,9 @@ function deces() {
 
 }
 
-function main() {
+function main(nbUnits) {
+
+  let units = new units(nbUnits);
 
 }
 
