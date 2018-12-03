@@ -9,7 +9,7 @@
  */
 
 class units{
-  constructor(nbUnits, nbVectors){
+  constructor(nbUnits, nbVectors, objective){
     this.nbUnits = nbUnits;
     this.mark = new Array();
     for (let i = 0; i < nbUnits; i++){
@@ -22,10 +22,16 @@ class units{
         this.map[i][j] = 0;
       }
     }
-    
+    this.objective = objective;
   }
-  get mark(){
-    // Compute mark for each unit
+  get mark(){ //MAYBE BETTER DOING ORTH PROJ BEFORE
+    for (let unit = 0; unit < this.nbUnits; unit++){
+      let tmpMark = 0;
+      for (let v = 0; v < nbVectors; v++){
+        tmpMark += Math.abs(objective[v] - this.map[unit][v]); //AND WHEN NEGATIVE ????
+      }
+      this.mark[unit] = tmpMark;
+    }
   }
   get randIni(){
   }
@@ -50,9 +56,9 @@ class units{
  * @param {number} nbUnits 
  * @return best combination
  */
-function main(nbUnits, time) {
+function main(nbUnits, time, vector) {
 
-  let units = new units(nbUnits, nbVectors);
+  let units = new units(nbUnits, nbVectors, vector);
   let solution = new Array();
   for (let i = 0; i < nbVectors; i++){
     solution[i]=0;
@@ -66,7 +72,7 @@ function main(nbUnits, time) {
 
   for (let year = 0; year < time; year++){
     units.mark();
-    let nextUnits = new units(nbUnits, nbVectors);
+    let nextUnits = new units(nbUnits, nbVectors, vector);
     for (let u = 0; u < nbunits, Units; u++){
       let father = selection(units);
       let mother = selection(units);
@@ -88,7 +94,6 @@ function main(nbUnits, time) {
     for (let i = 0; i < nbVectors; i++){
       solution[i]= units.map[tmp2][i];
     }
-
   }
   return(solution);
 }
