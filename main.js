@@ -26,12 +26,12 @@ class units{
     this.objective = objective;
   }
 
-  sort(){
+  sort(){ //TO DO
 
   }
 
   randIni(vectorNumber){ // Toute la convergence ou non viendra d'ici
-
+    // TO DO
   }
 
   mark(){ //MAYBE BETTER DOING ORTH PROJ BEFORE
@@ -85,7 +85,7 @@ class units{
     }
   }
 
-  reproduction(father, mother, u){
+  reproduction(father, mother, u){ //TO DO
 
     let tmpVector = new Array();
 
@@ -126,7 +126,7 @@ function main(nbUnits, time, vector, randNumber) {
     for (let u = 0; u < nbunits, Units; u++){
       let father = selection(units);
       let mother = selection(units);
-      nextUnits.reproduction(father, mother, u);
+      nextUnits.reproduction(father, mother, u); 
     }
     nextUnits.mark();
     units.merge(nextUnits);
