@@ -44,7 +44,7 @@ class units{
     }
   }
 
-  get selection(){
+  get selection(){ 
     let sum = 0;
     for (let v = 0; v < this.nbVectors; v++){
       sum += this.mark[v];
@@ -59,7 +59,19 @@ class units{
     return(selected);
   }
 
+  merge(nextUnits){
+    for (let u = this.nbUnits; u < this.nbUnits + nextUnits.nbUnits; u++){
+      this.map[u] = new Array();
+      for (let v = 0; v < this.nbVectors; v++){
+        this.map[u][v] = nextUnits.map[u - this.nbUnits][v];
+      }
+      this.mark[u] = 0;
+    }
+    this.nbUnits += nextUnits.nbUnits;
+  }
+
   eugenisme(){
+
   }
 
   deces(randNumber){
@@ -113,7 +125,8 @@ function main(nbUnits, time, vector, randNumber) {
       nextUnits.reproduction(father, mother, u);
     }
     nextUnits.mark();
-    units.eugenisme(nextUnits);
+    units.merge(nextUnits);
+    units.eugenisme();
     units.deces(randNumber);
 
     let tmp = units.mark[0];
