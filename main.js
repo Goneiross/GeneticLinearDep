@@ -26,33 +26,48 @@ class units{
   get mark(){
     // Compute mark for each unit
   }
-}
+  get randIni(){
+  }
 
+  get selection(){
 
-function ini() {
+  }
 
-}
+  get eugenisme(){
+  }
 
-function selection() {
+  get deces(){
+  }
 
-}
-
-function reproduction() {
-
-}
-
-function eugenisme() {
-
-}
-
-function deces() {
+  get reproduction(){
+  }
 
 }
 
-function main(nbUnits) {
+/**
+ * Compute Linear Dependency using genetic algorithm
+ * @param {number} nbUnits 
+ * @return best combination
+ */
+function main(nbUnits, time) {
 
-  let units = new units(nbUnits);
+  let units = new units(nbUnits, nbVectors);
+  units.randIni()
 
+  for (let year = 0; year < time; year++){
+    units.mark();
+    let nextUnits = new units(nbUnits, nbVectors);
+    for (let u = 0; u < nbunits, Units; u++){
+      let father = selection(units);
+      let mother = selection(units);
+      nextUnits.reproduction(father, mother, c);
+    }
+    nextUnits.mark();
+    units.eugenisme(nextUnits);
+    units.deces();
+  }
+
+  return(solution);
 }
 
 function analysis() {
