@@ -25,6 +25,10 @@ class units{
     this.objective = objective;
   }
 
+  sort(){
+    
+  }
+
   randIni(vectorNumber){ // Toute la convergence ou non viendra d'ici
 
   }
@@ -40,7 +44,18 @@ class units{
   }
 
   get selection(){
-
+    let sum = 0;
+    for (let v = 0; v < nbVectors; v++){
+      sum += this.mark[v];
+    }
+    let selected = -1;
+    this.sort();
+    let r = Math.floor(Math.random() * (sum + 1));
+    while (r > 0){
+      selected += 1;
+      r -= this.mark[selected];
+    }
+    return(selected);
   }
 
   eugenisme(){
@@ -48,7 +63,7 @@ class units{
 
   deces(randNumber){
     for (let r = 0; r < randNumber; r++){
-      let rand = Math.random() * this.nbUnits;
+      let rand = Math.floor(Math.random() * (this.nbUnits + 1));
       this.randIni(rand);
     }
   }
