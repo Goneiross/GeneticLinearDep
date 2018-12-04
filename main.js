@@ -8,7 +8,18 @@
  *      mark : || V' - V ||
  */
 
-class units{
+
+function max(array, size){
+  let maximum = array[0];
+  for (let v = 1; v < size; v++){
+    if (maximum < array[i]){
+      maximum = array[i];
+    }
+  }
+  return (maximum)
+}
+
+class units{ //ADD AGE FOR EACH UNIT !
   constructor(nbUnits, nbVectors, objective){
     this.nbUnits = nbUnits;
     this.nbVectors = nbVectors;
@@ -45,8 +56,14 @@ class units{
 
   }
 
-  randIni(vectorNumber){ // Toute la convergence ou non viendra d'ici
-    // TO DO
+  randIni(u, version){ // Most important part
+    if ( version == 0){ //Full rand = bad idea, but to test
+      for (let v = 0; v < this.nbVectors; v++){
+        this.map[u][v] = Math.rand() * (max(this.vector) + 1);
+      }
+    }else {
+      console.log("To be implemented")
+    }
   }
 
   mark(){ //MAYBE BETTER DOING ORTH PROJ BEFORE
@@ -96,7 +113,7 @@ class units{
   deces(randNumber){
     for (let r = 0; r < randNumber; r++){
       let rand = Math.floor(Math.random() * (this.nbUnits + 1));
-      this.randIni(rand);
+      this.randIni(rand, 0);
     }
   }
 
@@ -131,8 +148,8 @@ function main(nbUnits, time, vector, randNumber) {
     bestMarkPerYear[i]=0;
   }
 
-  for (let v = 0; v < nbVectors; v++){
-    units.randIni(v);
+  for (let u = 0; u < nbUnits; u++){
+    units.randIni(u, 0);
   }
   
   for (let year = 0; year < time; year++){
