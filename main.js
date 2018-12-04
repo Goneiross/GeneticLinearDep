@@ -20,7 +20,7 @@ function max(array, size){
 }
 
 class units{ //ADD AGE FOR EACH UNIT !
-  constructor(nbUnits, nbVectors, nbPoints,objective, vectorBase){
+  constructor(nbUnits, nbVectors, nbPoints,vector, vectorBase){
     this.nbUnits = nbUnits;
     this.nbVectors = nbVectors;
     this.nbPoints = nbPoints;
@@ -35,7 +35,7 @@ class units{ //ADD AGE FOR EACH UNIT !
         this.map[i].push(0);
       }
     }
-    this.objective = objective;
+    this.vector = vector;
     this.vectorBase = vectorBase;
   }
 
@@ -60,14 +60,14 @@ class units{ //ADD AGE FOR EACH UNIT !
   randIni(u, version){ // Most important part
     if ( version == 0){ //Full rand = bad idea, but to test
       for (let v = 0; v < this.nbVectors; v++){
-        this.map[u][v] = Math.rand() * (max(this.vector) + 1);
+        this.map[u][v] = Math.random() * (max(this.vector) + 1);
       }
     }else {
       console.log("To be implemented")
     }
   }
 
-  mark(){ //MAYBE BETTER DOING ORTH PROJ BEFORE
+  set mark(){ //MAYBE BETTER DOING ORTH PROJ BEFORE
     for (let unit = 0; unit < this.nbUnits; unit++){
       let tmpMark = 0;
       let tmpVector = [];
@@ -82,7 +82,7 @@ class units{ //ADD AGE FOR EACH UNIT !
         }
       }
       for (let v = 0; v < this.nbVectors; v++){
-        tmpMark += Math.abs(objective[v] - tmpVector[v]); //AND WHEN NEGATIVE ????
+        tmpMark += Math.abs(vector[v] - tmpVector[v]); //AND WHEN NEGATIVE ????
       }
       this.mark[unit] = tmpMark;
     }
@@ -103,7 +103,7 @@ class units{ //ADD AGE FOR EACH UNIT !
     return(selected);
   }
 
-  merge(nextUnits){
+  set merge(nextUnits){
     for (let u = this.nbUnits; u < this.nbUnits + nextUnits.nbUnits; u++){
       this.map.push([]);
       for (let v = 0; v < this.nbVectors; v++){
@@ -114,7 +114,7 @@ class units{ //ADD AGE FOR EACH UNIT !
     this.nbUnits += nextUnits.nbUnits;
   }
 
-  eugenisme(){
+  set eugenisme(){
     this.sort();
     for (let u = this.nbUnits / 2; u < this.nbUnits; u ++){//BE MORE GENERAL
       this.map.pop();
@@ -122,14 +122,14 @@ class units{ //ADD AGE FOR EACH UNIT !
     this.nbUnits /= 2;
   }
 
-  deces(randNumber){
+  set deces(randNumber){
     for (let r = 0; r < randNumber; r++){
       let rand = Math.floor(Math.random() * (this.nbUnits + 1));
       this.randIni(rand, 0);
     }
   }
 
-  reproduction(father, mother, u){ //TO DO
+  set reproduction(father, mother, u){ //TO DO
 
     let tmpVector = [];
     let r = Math.floor(Math.random() * (2));
@@ -162,11 +162,11 @@ class units{ //ADD AGE FOR EACH UNIT !
  * @param {number} nbUnits 
  * @return best combination
  */
-function main(nbUnits, time, randNumber, objective, vectorBase) {
+function main(nbUnits, time, randNumber, vector, vectorBase) {
 
-  let nbVectors = objective.length;
+  let nbVectors = vector.length;
   let nbPoints = vectorBase[0].length;
-  let unitsTab = new units(nbUnits, nbVectors, nbPoints, objective, vectorBase);
+  let unitsTab = new units(nbUnits, nbVectors, nbPoints, vector, vectorBase);
   let solution = [];
   for (let v = 0; v < nbVectors; v++){
     solution.push(0);
@@ -182,8 +182,8 @@ function main(nbUnits, time, randNumber, objective, vectorBase) {
   
   for (let year = 0; year < time; year++){
     unitsTab.mark();
-    let nextUnits = new units(nbUnits, nbVectors, objective);
-    for (let u = 0; u < nbunits, Units; u++){
+    let nextUnits = new units(nbUnits, nbVectors, vector);
+    for (let u = 0; u < nbUnits; u++){
       let father = selection(unitsTab);
       let mother = selection(unitsTab);
       nextUnits.reproduction(father, mother, u); 
@@ -209,10 +209,10 @@ function main(nbUnits, time, randNumber, objective, vectorBase) {
   return(solution);
 }
 
-let objective = []
-let vectorBase = [[]]
-let nbUnits = 0;
-let time = 0;
+let vector = [1,0,0,1];
+let vectorBase = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]];
+let nbUnits = 5;
+let time = 5;
 let randNumber = 0;
 
-main (nbUnits, time, randNumber, objective, vectorBase);
+main (nbUnits, time, randNumber, vector, vectorBase);
