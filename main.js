@@ -20,9 +20,10 @@ function max(array, size){
 }
 
 class units{ //ADD AGE FOR EACH UNIT !
-  constructor(nbUnits, nbVectors, objective){
+  constructor(nbUnits, nbVectors, nbPoints,objective, vectorBase){
     this.nbUnits = nbUnits;
     this.nbVectors = nbVectors;
+    this.nbPoints = nbPoints;
     this.mark = new Array();
     for (let i = 0; i < nbUnits; i++){
       this.mark[i] = 0;
@@ -35,6 +36,7 @@ class units{ //ADD AGE FOR EACH UNIT !
       }
     }
     this.objective = objective;
+    this.vectorBase = vectorBase;
   }
 
   sort(){ //TO DO //Bon vieux tribulle pour gain de temps de dev
@@ -69,9 +71,17 @@ class units{ //ADD AGE FOR EACH UNIT !
   mark(){ //MAYBE BETTER DOING ORTH PROJ BEFORE
     for (let unit = 0; unit < this.nbUnits; unit++){
       let tmpMark = 0;
+      let tmpVector = new array();
       for (let v = 0; v < this.nbVectors; v++){
-        tmpMark += Math.abs(objective[v] - this.map[unit][v]); //AND WHEN NEGATIVE ????
+        for (let w = 0; w < this.map[u][v]; w++){
+          for (let p = 0; p < this.nbPoints; p ++){
+            tmpVector[p] += w * this.vectorBase[v][p];
+          }
+        }
       }
+      for (let v = 0; v < this.nbVectors; v++){
+        tmpMark += Math.abs(objective[v] - tmpVector[v]); //AND WHEN NEGATIVE ????
+      
       this.mark[unit] = tmpMark;
     }
   }
@@ -150,9 +160,9 @@ class units{ //ADD AGE FOR EACH UNIT !
  * @param {number} nbUnits 
  * @return best combination
  */
-function main(nbUnits, time, vector, randNumber) {
+function main(nbUnits, time, randNumber, objective, vectorBase) {
 
-  let units = new units(nbUnits, nbVectors, vector);
+  let units = new units(nbUnits, nbVectors, nbPoints, objective, vectorBase);
   let solution = new Array();
   for (let v = 0; v < nbVectors; v++){
     solution[v]=0;
@@ -168,7 +178,7 @@ function main(nbUnits, time, vector, randNumber) {
   
   for (let year = 0; year < time; year++){
     units.mark();
-    let nextUnits = new units(nbUnits, nbVectors, vector);
+    let nextUnits = new units(nbUnits, nbVectors, objective);
     for (let u = 0; u < nbunits, Units; u++){
       let father = selection(units);
       let mother = selection(units);
@@ -193,7 +203,4 @@ function main(nbUnits, time, vector, randNumber) {
     }
   }
   return(solution);
-}
-
-function analysis() {
 }
