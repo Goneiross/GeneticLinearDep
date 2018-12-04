@@ -252,6 +252,14 @@ function main(nbUnits, time, vector, vectorBase) {
   return(solution);
 }
 
+let vector = [0, 1, 1, 0];
+let vectorBase = [
+  [1, 0, 0, 0],
+  [1, 1, 0, 0],
+  [1, 1, 1, 0],
+  [1, 1, 1, 1]
+];
+
 /*
 let vector = [0, 1, 1, 0, 0, 0, 0, 0, 0, 0];
 let vectorBase = [
@@ -267,11 +275,11 @@ let vectorBase = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ]; */
 
-
+/*
 let vector = [1, 0 , 0 ,1];
-let vectorBase= [[1, 0 , 0 ,0],[0, 1 , 0 ,0],[0, 0 , 1 ,0],[0, 0 , 0 ,1]]; 
+let vectorBase= [[1, 0 , 0 ,0],[0, 1 , 0 ,0],[0, 0 , 1 ,0],[0, 0 , 0 ,1]]; */
 
-let nbUnits = 20;
+let nbUnits = 30;
 let time = 2000;
 
 let solution = main (nbUnits, time, vector, vectorBase);
