@@ -24,15 +24,15 @@ class units{ //ADD AGE FOR EACH UNIT !
     this.nbUnits = nbUnits;
     this.nbVectors = nbVectors;
     this.nbPoints = nbPoints;
-    this.mark = new Array();
+    this.mark = [];
     for (let i = 0; i < nbUnits; i++){
-      this.mark[i] = 0;
+      this.mark.push(0);
     }
-    this.map = new Array();
+    this.map = []
     for (let i = 0; i < nbUnits; i++){
-      this.map[i] = new Array();
+      this.map.push([]);
       for (let j = 0; j < this.nbVectors; j++){
-        this.map[i][j] = 0;
+        this.map[i].push(0);
       }
     }
     this.objective = objective;
@@ -70,7 +70,10 @@ class units{ //ADD AGE FOR EACH UNIT !
   mark(){ //MAYBE BETTER DOING ORTH PROJ BEFORE
     for (let unit = 0; unit < this.nbUnits; unit++){
       let tmpMark = 0;
-      let tmpVector = new array();
+      let tmpVector = [];
+      for (let i = 0; i < this.nbPoints; p++){
+        tmpVector.push(0);
+      }
       for (let v = 0; v < this.nbVectors; v++){
         for (let w = 0; w < this.map[u][v]; w++){
           for (let p = 0; p < this.nbPoints; p ++){
@@ -81,7 +84,7 @@ class units{ //ADD AGE FOR EACH UNIT !
       for (let v = 0; v < this.nbVectors; v++){
         tmpMark += Math.abs(objective[v] - tmpVector[v]); //AND WHEN NEGATIVE ????
       }
-        this.mark[unit] = tmpMark;
+      this.mark[unit] = tmpMark;
     }
   }
 
@@ -102,9 +105,9 @@ class units{ //ADD AGE FOR EACH UNIT !
 
   merge(nextUnits){
     for (let u = this.nbUnits; u < this.nbUnits + nextUnits.nbUnits; u++){
-      this.map[u] = new Array();
+      this.map.push([]);
       for (let v = 0; v < this.nbVectors; v++){
-        this.map[u][v] = nextUnits.map[u - this.nbUnits][v];
+        this.map[u].push(nextUnits.map[u - this.nbUnits][v]);
       }
       this.mark[u] = 0;
     }
@@ -128,22 +131,22 @@ class units{ //ADD AGE FOR EACH UNIT !
 
   reproduction(father, mother, u){ //TO DO
 
-    let tmpVector = new Array();
+    let tmpVector = [];
     let r = Math.floor(Math.random() * (2));
 
     if (r == 0){
       for (let v = 0; v < Math.floor(this.nbVectors / 2); v ++){
-        tmpVector[v] = father[v];
+        tmpVector.push(father[v]);
       }
       for (let v = Math.floor(this.nbVectors / 2); v < this.nbVectors; v ++){
-        tmpVector[v] = mother[u];
+        tmpVector.push(mother[u]);
       }
     } else {
       for (let v = 0; v < Math.floor(this.nbVectors / 2); v ++){
-        tmpVector[v] = mother[v];
+        tmpVector.push(mother[v]);
       }
       for (let v = Math.floor(this.nbVectors / 2); v < this.nbVectors; v ++){
-        tmpVector[v] = father[u];
+        tmpVector.push(father[u]);
       }
     }
 
@@ -161,45 +164,55 @@ class units{ //ADD AGE FOR EACH UNIT !
  */
 function main(nbUnits, time, randNumber, objective, vectorBase) {
 
-  let units = new units(nbUnits, nbVectors, nbPoints, objective, vectorBase);
-  let solution = new Array();
+  let nbVectors = objective.length;
+  let nbPoints = vectorBase[0].length;
+  let unitsTab = new units(nbUnits, nbVectors, nbPoints, objective, vectorBase);
+  let solution = [];
   for (let v = 0; v < nbVectors; v++){
-    solution[v]=0;
+    solution.push(0);
   }
-  let bestMarkPerYear = new Array();
+  let bestMarkPerYear = [];
   for (let i = 0; i < time; i++){
-    bestMarkPerYear[i]=0;
+    bestMarkPerYear.push(0);
   }
 
   for (let u = 0; u < nbUnits; u++){
-    units.randIni(u, 0);
+    unitsTab.randIni(u, 0);
   }
   
   for (let year = 0; year < time; year++){
-    units.mark();
+    unitsTab.mark();
     let nextUnits = new units(nbUnits, nbVectors, objective);
     for (let u = 0; u < nbunits, Units; u++){
-      let father = selection(units);
-      let mother = selection(units);
+      let father = selection(unitsTab);
+      let mother = selection(unitsTab);
       nextUnits.reproduction(father, mother, u); 
     }
     nextUnits.mark();
-    units.merge(nextUnits);
-    units.eugenisme();
-    units.deces(randNumber);
+    unitsTab.merge(nextUnits);
+    unitsTab.eugenisme();
+    unitsTab.deces(randNumber);
 
-    let tmp = units.mark[0];
+    let tmp = unitsTab.mark[0];
     let tmp2 = 0;
-    for (let u = 0; u < nbunits, Units; u++){
-      if (tmp < units.mark[i]){
-        tmp = units.mark[i];
+    for (let u = 0; u < nbunits; u++){
+      if (tmp < unitsTab.mark[i]){
+        tmp = unitsTab.mark[i];
         tmp2 = i;
       }
     }
     bestMarkPerYear[year] = tmp;
     for (let i = 0; i < nbVectors; i++){
-      solution[i]= units.map[tmp2][i];
+      solution[i]= unitsTab.map[tmp2][i];
     }
   }
   return(solution);
 }
+
+let objective = []
+let vectorBase = [[]]
+let nbUnits = 0;
+let time = 0;
+let randNumber = 0;
+
+main (nbUnits, time, randNumber, objective, vectorBase);
