@@ -120,15 +120,29 @@ class units{ //ADD AGE FOR EACH UNIT !
   reproduction(father, mother, u){ //TO DO
 
     let tmpVector = new Array();
+    let r = Math.floor(Math.random() * (2));
 
-    // Compute tmpVector
+    if (r == 0){
+      for (let v = 0; v < Math.floor(this.nbVectors / 2); v ++){
+        tmpVector[v] = father[v];
+      }
+      for (let v = Math.floor(this.nbVectors / 2); v < this.nbVectors; v ++){
+        tmpVector[v] = mother[u];
+      }
+    } else {
+      for (let v = 0; v < Math.floor(this.nbVectors / 2); v ++){
+        tmpVector[v] = mother[v];
+      }
+      for (let v = Math.floor(this.nbVectors / 2); v < this.nbVectors; v ++){
+        tmpVector[v] = father[u];
+      }
+    }
 
     this.mark[u]=0;
     for (let v = 0; v < nbVectors; v++){
       this.map[u][v] = tmpVector[v];
     }
   }
-
 }
 
 /**
