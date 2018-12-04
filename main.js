@@ -174,10 +174,12 @@ function eugenisme(units){
   units.nbUnits /= 2;
 }
 
-function deces(units, randNumber){
-  for (let r = 0; r < randNumber; r++){
-    let rand = Math.floor(Math.random() * (units.nbUnits + 1));
-    randIni(units, rand, 0);
+function deces(units){
+  for (let u = 0; u < units.nbUnits; u++){
+    units.age[u]+=1;
+    if(units.age[u] > 10){
+      randIni(units, u, 0);
+    }
   }
 }
 
@@ -186,7 +188,7 @@ function deces(units, randNumber){
  * @param {number} nbUnits 
  * @return best combination
  */
-function main(nbUnits, time, randNumber, vector, vectorBase) {
+function main(nbUnits, time, vector, vectorBase) {
   
   let nbVectors = vector.length;
   let nbPoints = vectorBase[0].length;
@@ -203,8 +205,8 @@ function main(nbUnits, time, randNumber, vector, vectorBase) {
   for (let u = 0; u < nbUnits; u++){
     randIni(unitsTab, u, 0);
   }
-  console.log("INI :");
-  console.table(unitsTab.map);
+  //console.log("INI :");
+  //console.table(unitsTab.map);
   
   for (let year = 0; year < time; year++){
     for (let unit = 0; unit < nbUnits; unit ++){
@@ -216,9 +218,9 @@ function main(nbUnits, time, randNumber, vector, vectorBase) {
         return(solution);
       }
     } 
-    console.log("-------------------- YEAR", year + 1, "--------------------");
-    console.log("---------- > MARK :")
-    console.table(unitsTab.mark);
+    //console.log("-------------------- YEAR", year + 1, "--------------------");
+    //console.log("---------- > MARK :")
+    //console.table(unitsTab.mark);
     let nextUnits = new units(nbUnits, nbVectors, vector);
     for (let u = 0; u < nbUnits; u++){
       let father = selection(unitsTab);
@@ -232,7 +234,7 @@ function main(nbUnits, time, randNumber, vector, vectorBase) {
     }
     merge(unitsTab, nextUnits);
     eugenisme(unitsTab);
-    deces(unitsTab, randNumber);
+    deces(unitsTab);
 
     for (let unit = 0; unit < unitsTab.nbUnits; unit ++){
       mark(unitsTab, unit);
@@ -240,8 +242,8 @@ function main(nbUnits, time, randNumber, vector, vectorBase) {
     unitsTab.sort();
     
     bestMarkPerYear[year] = unitsTab.mark[0];
-    console.log("---------- > NEW MAP :");
-    console.table(unitsTab.map);
+    //console.log("---------- > NEW MAP :");
+    //console.table(unitsTab.map);
     
   }
   for (let i = 0; i < nbVectors; i++){
@@ -270,8 +272,7 @@ let vector = [1, 0 , 0 ,1];
 let vectorBase= [[1, 0 , 0 ,0],[0, 1 , 0 ,0],[0, 0 , 1 ,0],[0, 0 , 0 ,1]]; 
 
 let nbUnits = 20;
-let time = 200;
-let randNumber = 0;
+let time = 2000;
 
-let solution = main (nbUnits, time, randNumber, vector, vectorBase);
+let solution = main (nbUnits, time, vector, vectorBase);
 console.table(solution);
