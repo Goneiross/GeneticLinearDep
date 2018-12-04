@@ -193,7 +193,13 @@ function main(nbUnits, time, randNumber, vector, vectorBase) {
   for (let year = 0; year < time; year++){
     for (let unit = 0; unit < nbUnits; unit ++){
       mark(unitsTab, unit);
-    }
+      if (unitsTab.mark[unit] == 0){
+        for (let i = 0; i < nbVectors; i++){
+          solution[i]= unitsTab.map[unit][i];
+        }
+        return(solution);
+      }
+    } 
     console.log("-------------------- YEAR", year + 1, "--------------------");
     console.log("---------- > MARK :")
     console.table(unitsTab.mark);
@@ -232,8 +238,8 @@ function main(nbUnits, time, randNumber, vector, vectorBase) {
 
 let vector = [1,0,0,2];
 let vectorBase = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,2]];
-let nbUnits = 10;
-let time = 10;
+let nbUnits = 100;
+let time = 100;
 let randNumber = 0;
 
 let solution = main (nbUnits, time, randNumber, vector, vectorBase);
