@@ -14,8 +14,10 @@ class units{ //ADD AGE FOR EACH UNIT !
     this.nbVectors = nbVectors;
     this.nbPoints = nbPoints;
     this.mark = [];
+    this.age = [];
     for (let i = 0; i < nbUnits; i++){
       this.mark.push(0);
+      this.age.push(0);
     }
     this.map = []
     for (let i = 0; i < nbUnits; i++){
@@ -33,9 +35,12 @@ class units{ //ADD AGE FOR EACH UNIT !
     for (let i = 0; i < this.nbUnits; i++){
       for (let j = 1; j < this.nbUnits; j++){
         if (this.mark[j - 1] > this.mark[j]){
-          tmp= this.mark[j - 1];
+          tmp = this.mark[j - 1];
           this.mark[j - 1] = this.mark[j];
           this.mark[j] = this.mark[j - 1];
+          tmp = this.age[j - 1];
+          this.age[j - 1] = this.age[j];
+          this.age[j] = this.age[j - 1];
           for (let v = 0; v < this.nbVectors; v++){
             tmp = this.map[j - 1][v];
             this.map[j - 1][v] = this.map[j][v];
@@ -55,6 +60,8 @@ function randIni(units, u, version){ // Most important part
   }else {
     console.log("To be implemented")
   }
+  units.age[u] = 0;
+  units.mark[u] = 0;
 }
 
 function mark(units, unit){ //MAYBE BETTER DOING ORTH PROJ BEFORE
@@ -108,14 +115,14 @@ function reproduction(units, nextUnits, father, mother, u){ //TO DO
       tmpVector.push(units.map[father][v]);
     }
     for (let v = Math.floor(units.nbVectors / 2); v < units.nbVectors; v ++){
-      tmpVector.push(units.map[mother][u]);
+      tmpVector.push(units.map[mother][v]);
     }
   } else {
     for (let v = 0; v < Math.floor(units.nbVectors / 2); v ++){
       tmpVector.push(units.map[mother][v]);
     }
     for (let v = Math.floor(units.nbVectors / 2); v < units.nbVectors; v ++){
-      tmpVector.push(units.map[father][u]);
+      tmpVector.push(units.map[father][v]);
     }
   }
 
@@ -123,6 +130,8 @@ function reproduction(units, nextUnits, father, mother, u){ //TO DO
   for (let v = 0; v < nextUnits.nbVectors; v++){
     nextUnits.map[u][v] = tmpVector[v];
   }
+  nextUnits.age [u] = 0;
+  nextUnits.mark [u] = 0;
 }
 
 function merge(units, nextUnits){
@@ -131,7 +140,8 @@ function merge(units, nextUnits){
     for (let v = 0; v < units.nbVectors; v++){
       units.map[u].push(nextUnits.map[u - units.nbUnits][v]);
     }
-    units.mark[u] = 0;
+    units.mark.push(nextUnits.mark);
+    units.age.push(nextUnits.age);
   }
   units.nbUnits += nextUnits.nbUnits;
 }
@@ -140,6 +150,8 @@ function eugenisme(units){
   units.sort();
   for (let u = units.nbUnits / 2; u < units.nbUnits; u ++){//BE MORE GENERAL
     units.map.pop();
+    units.age.pop();
+    units.mark.pop();
   }
   units.nbUnits /= 2;
 }
@@ -217,8 +229,8 @@ function main(nbUnits, time, randNumber, vector, vectorBase) {
 
 let vector = [1,0,0,1];
 let vectorBase = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]];
-let nbUnits = 100;
-let time = 100;
+let nbUnits = 10;
+let time = 3;
 let randNumber = 0;
 
 let solution = main (nbUnits, time, randNumber, vector, vectorBase);
