@@ -1,8 +1,8 @@
 function max(array, size){
   let maximum = array[0];
   for (let v = 1; v < size; v++){
-    if (maximum < array[i]){
-      maximum = array[i];
+    if (maximum < array[v]){
+      maximum = array[v];
     }
   }
   return (maximum)
@@ -55,7 +55,7 @@ class units{ //ADD AGE FOR EACH UNIT !
 function randIni(units, u, version){ // Most important part
   if ( version == 0){ //Full rand = bad idea, but to test
     for (let v = 0; v < units.nbVectors; v++){
-      units.map[u][v] = Math.floor(Math.random() * (max(units.vector) + 1));
+      units.map[u][v] = Math.floor(Math.random() * (max(units.vector) + 2));
     }
   }else {
     console.log("To be implemented")
@@ -65,7 +65,7 @@ function randIni(units, u, version){ // Most important part
 }
 
 function mark(units, unit){ //MAYBE BETTER DOING ORTH PROJ BEFORE
-  console.log("MARK", units.map[unit]);
+  //console.log("MARK", units.map[unit]);
   let tmpMark = 0;
   let tmpVector = [];
   for (let i = 0; i < units.nbPoints; i++){
@@ -78,22 +78,29 @@ function mark(units, unit){ //MAYBE BETTER DOING ORTH PROJ BEFORE
       }
     }
   }
-  console.log("tmp", tmpVector, "obj", units.vector);
+  //console.log("tmp", tmpVector, "obj", units.vector);
   for (let p = 0; p < units.nbPoints; p++){
     tmpMark += Math.abs(units.vector[p] - tmpVector[p]); //AND WHEN NEGATIVE ????
   }
-  console.log("error", tmpMark);
+  //console.log("error", tmpMark);
   units.mark[unit] = tmpMark;
 
 }
 
-function selection(units){ 
+function selection(units){ // PLUS DE CHANCE D'ETRE PRIX SI ERROR HAUTE !!!! ESPECE DE GUILLAUME
   let sum = 0;
-  for (let v = 0; v < units.nbVectors; v++){
-    sum += units.mark[v];
+  
+  let maximum = max(units.mark, units.nbUnits); // On inverse les chances
+  for (let u = 0; u < units.nbUnits; u++){
+    units.mark[u] = maximum - units.mark[u];
+  }
+  //console.log(maximum)
+  //console.log("mark", units.mark);
+
+  for (let u = 0; u < units.nbUnits; u++){
+    sum += units.mark[u];
   }
   let selected = 0;
-  units.sort();
   let r = Math.floor(Math.random() * (sum + 1));
   while (r > 0){
     selected += 1;
@@ -102,6 +109,15 @@ function selection(units){
   if (r < 0){
     selected -= 1
   }
+  if (selected >= units.nbUnits){//SOLVE THIS CASE PROPERLY
+  selected = units.nbUnits - 1;
+  }
+  
+
+  for (let u = 0; u < units.nbUnits; u++){
+    mark(units,u);
+  }
+  //console.log("after remark", units.mark);
   return(selected);
 }
 
@@ -109,9 +125,9 @@ function reproduction(units, nextUnits, father, mother, u){ //TO DO
 
   let tmpVector = [];
   let r = Math.floor(Math.random() * (2));
-  console.log("R", r);
-  console.log("father", father, units.map[father]);
-  console.log("mother", mother, units.map[mother]);
+  //console.log("R", r);
+  //console.log("father", father, units.map[father]);
+  //console.log("mother", mother, units.map[mother]);
   if (r == 0){
     for (let v = 0; v < Math.floor(units.nbVectors / 2); v ++){
       tmpVector.push(units.map[father][v]);
@@ -208,8 +224,8 @@ function main(nbUnits, time, randNumber, vector, vectorBase) {
       let father = selection(unitsTab);
       let mother = selection(unitsTab);
       reproduction(unitsTab, nextUnits, father, mother, u); 
-      console.log("CHILD");
-      console.log(nextUnits.map[u]);
+      //console.log("CHILD");
+      //console.log(nextUnits.map[u]);
     }
     for (let unit = 0; unit < nextUnits.nbUnits; unit ++){
       mark(nextUnits, unit);
@@ -217,29 +233,44 @@ function main(nbUnits, time, randNumber, vector, vectorBase) {
     merge(unitsTab, nextUnits);
     eugenisme(unitsTab);
     deces(unitsTab, randNumber);
-    let tmp = unitsTab.mark[0];
-    let tmp2 = 0;
-    for (let u = 0; u < nbUnits; u++){
-      if (tmp < unitsTab.mark[u]){
-        tmp = unitsTab.mark[u];
-        tmp2 = u;
-      }
+
+    for (let unit = 0; unit < unitsTab.nbUnits; unit ++){
+      mark(unitsTab, unit);
     }
-    bestMarkPerYear[year] = tmp;
-    for (let i = 0; i < nbVectors; i++){
-      solution[i]= unitsTab.map[tmp2][i];
-    }
+    unitsTab.sort();
+    
+    bestMarkPerYear[year] = unitsTab.mark[0];
     console.log("---------- > NEW MAP :");
     console.table(unitsTab.map);
     
   }
+  for (let i = 0; i < nbVectors; i++){
+    solution[i]= unitsTab.map[0][i];
+  }
   return(solution);
 }
 
-let vector = [1,0,0,2];
-let vectorBase = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,2]];
-let nbUnits = 100;
-let time = 100;
+/*
+let vector = [0, 1, 1, 0, 0, 0, 0, 0, 0, 0];
+let vectorBase = [
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+  [1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+  [1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+  [1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+  [1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+  [1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+  [1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+]; */
+
+
+let vector = [1, 0 , 0 ,1];
+let vectorBase= [[1, 0 , 0 ,0],[0, 1 , 0 ,0],[0, 0 , 1 ,0],[0, 0 , 0 ,1]]; 
+
+let nbUnits = 20;
+let time = 200;
 let randNumber = 0;
 
 let solution = main (nbUnits, time, randNumber, vector, vectorBase);
