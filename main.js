@@ -26,7 +26,22 @@ class units{
     this.objective = objective;
   }
 
-  sort(){ //TO DO
+  sort(){ //TO DO //Bon vieux tribulle pour gain de temps de dev
+    let tmp = 0;
+    for (let i = 0; i < this.nbUnits; i++){
+      for (let j = 1; j < this.nbUnits; j++){
+        if (this.mark[j - 1] > this.mark[j]){
+          tmp= this.mark[j - 1];
+          this.mark[j - 1] = this.mark[j];
+          this.mark[j] = this.mark[j - 1];
+          for (let v = 0; v < this.nbVectors; v++){
+            tmp = this.map[j - 1][v];
+            this.map[j - 1][v] = this.map[j][v];
+            this.map[j][v] = tmp;
+          }
+        }
+      }
+    }
 
   }
 
