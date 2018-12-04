@@ -1,14 +1,3 @@
-/** ------ Description -------
- *  CLASS UNIT :
- *    var :
- *      nbUnits
- *      mark[unitNumber]
- *      map[unitNumber][Vector]
- *    function :
- *      mark : || V' - V ||
- */
-
-
 function max(array, size){
   let maximum = array[0];
   for (let v = 1; v < size; v++){
@@ -67,8 +56,8 @@ class units{ //ADD AGE FOR EACH UNIT !
     }
   }
 
-  set mark(){ //MAYBE BETTER DOING ORTH PROJ BEFORE
-    for (let unit = 0; unit < this.nbUnits; unit++){
+  mark(unit){ //MAYBE BETTER DOING ORTH PROJ BEFORE
+    
       let tmpMark = 0;
       let tmpVector = [];
       for (let i = 0; i < this.nbPoints; p++){
@@ -85,7 +74,7 @@ class units{ //ADD AGE FOR EACH UNIT !
         tmpMark += Math.abs(vector[v] - tmpVector[v]); //AND WHEN NEGATIVE ????
       }
       this.mark[unit] = tmpMark;
-    }
+    
   }
 
   get selection(){ 
@@ -103,7 +92,7 @@ class units{ //ADD AGE FOR EACH UNIT !
     return(selected);
   }
 
-  set merge(nextUnits){
+ merge(nextUnits){
     for (let u = this.nbUnits; u < this.nbUnits + nextUnits.nbUnits; u++){
       this.map.push([]);
       for (let v = 0; v < this.nbVectors; v++){
@@ -114,7 +103,7 @@ class units{ //ADD AGE FOR EACH UNIT !
     this.nbUnits += nextUnits.nbUnits;
   }
 
-  set eugenisme(){
+  eugenisme(){
     this.sort();
     for (let u = this.nbUnits / 2; u < this.nbUnits; u ++){//BE MORE GENERAL
       this.map.pop();
@@ -122,14 +111,14 @@ class units{ //ADD AGE FOR EACH UNIT !
     this.nbUnits /= 2;
   }
 
-  set deces(randNumber){
+  deces(randNumber){
     for (let r = 0; r < randNumber; r++){
       let rand = Math.floor(Math.random() * (this.nbUnits + 1));
       this.randIni(rand, 0);
     }
   }
 
-  set reproduction(father, mother, u){ //TO DO
+  reproduction(father, mother, u){ //TO DO
 
     let tmpVector = [];
     let r = Math.floor(Math.random() * (2));
@@ -163,7 +152,7 @@ class units{ //ADD AGE FOR EACH UNIT !
  * @return best combination
  */
 function main(nbUnits, time, randNumber, vector, vectorBase) {
-
+  
   let nbVectors = vector.length;
   let nbPoints = vectorBase[0].length;
   let unitsTab = new units(nbUnits, nbVectors, nbPoints, vector, vectorBase);
@@ -181,16 +170,20 @@ function main(nbUnits, time, randNumber, vector, vectorBase) {
   }
   
   for (let year = 0; year < time; year++){
-    unitsTab.mark();
+    for (let unit = 0; unit < nbUnits; unit ++){
+      unitsTab.mark(unit);
+    }
     let nextUnits = new units(nbUnits, nbVectors, vector);
     for (let u = 0; u < nbUnits; u++){
       let father = selection(unitsTab);
       let mother = selection(unitsTab);
       nextUnits.reproduction(father, mother, u); 
     }
-    nextUnits.mark();
+    for (let unit = 0; unit < nextUnits.nbUnits; unit ++){
+      nextUnits.mark(unit);
+    }
     unitsTab.merge(nextUnits);
-    unitsTab.eugenisme();
+    unitsTab.eugenisme(2);
     unitsTab.deces(randNumber);
 
     let tmp = unitsTab.mark[0];
