@@ -55,7 +55,6 @@ class units{ //ADD AGE FOR EACH UNIT !
         }
       }
     }
-
   }
 
   randIni(u, version){ // Most important part
@@ -81,8 +80,8 @@ class units{ //ADD AGE FOR EACH UNIT !
       }
       for (let v = 0; v < this.nbVectors; v++){
         tmpMark += Math.abs(objective[v] - tmpVector[v]); //AND WHEN NEGATIVE ????
-      
-      this.mark[unit] = tmpMark;
+      }
+        this.mark[unit] = tmpMark;
     }
   }
 
