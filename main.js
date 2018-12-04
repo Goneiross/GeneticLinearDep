@@ -65,7 +65,7 @@ function randIni(units, u, version){ // Most important part
 }
 
 function mark(units, unit){ //MAYBE BETTER DOING ORTH PROJ BEFORE
-    
+  console.log("MARK", units.map[unit]);
   let tmpMark = 0;
   let tmpVector = [];
   for (let i = 0; i < units.nbPoints; i++){
@@ -74,13 +74,15 @@ function mark(units, unit){ //MAYBE BETTER DOING ORTH PROJ BEFORE
   for (let v = 0; v < units.nbVectors; v++){
     for (let w = 0; w < units.map[unit][v]; w++){
       for (let p = 0; p < units.nbPoints; p ++){
-        tmpVector[p] += w * units.vectorBase[v][p];
+        tmpVector[p] += units.vectorBase[v][p];
       }
     }
   }
-  for (let v = 0; v < units.nbVectors; v++){
-    tmpMark += Math.abs(vector[v] - tmpVector[v]); //AND WHEN NEGATIVE ????
+  console.log("tmp", tmpVector, "obj", units.vector);
+  for (let p = 0; p < units.nbPoints; p++){
+    tmpMark += Math.abs(units.vector[p] - tmpVector[p]); //AND WHEN NEGATIVE ????
   }
+  console.log("error", tmpMark);
   units.mark[unit] = tmpMark;
 
 }
@@ -223,14 +225,15 @@ function main(nbUnits, time, randNumber, vector, vectorBase) {
     }
     console.log("---------- > NEW MAP :");
     console.table(unitsTab.map);
+    
   }
   return(solution);
 }
 
-let vector = [1,0,0,1];
-let vectorBase = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]];
+let vector = [1,0,0,2];
+let vectorBase = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,2]];
 let nbUnits = 10;
-let time = 3;
+let time = 10;
 let randNumber = 0;
 
 let solution = main (nbUnits, time, randNumber, vector, vectorBase);
