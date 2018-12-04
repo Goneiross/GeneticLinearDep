@@ -45,68 +45,15 @@ class units{ //ADD AGE FOR EACH UNIT !
       }
     }
   }
+}
 
-  randIni(u, version){ // Most important part
-    if ( version == 0){ //Full rand = bad idea, but to test
-      for (let v = 0; v < this.nbVectors; v++){
-        this.map[u][v] = Math.random() * (max(this.vector) + 1);
-      }
-    }else {
-      console.log("To be implemented")
+function randIni(units, u, version){ // Most important part
+  if ( version == 0){ //Full rand = bad idea, but to test
+    for (let v = 0; v < units.nbVectors; v++){
+      units.map[u][v] = Math.floor(Math.random() * (max(units.vector) + 1));
     }
-  }
-
- merge(nextUnits){
-    for (let u = this.nbUnits; u < this.nbUnits + nextUnits.nbUnits; u++){
-      this.map.push([]);
-      for (let v = 0; v < this.nbVectors; v++){
-        this.map[u].push(nextUnits.map[u - this.nbUnits][v]);
-      }
-      this.mark[u] = 0;
-    }
-    this.nbUnits += nextUnits.nbUnits;
-  }
-
-  eugenisme(){
-    this.sort();
-    for (let u = this.nbUnits / 2; u < this.nbUnits; u ++){//BE MORE GENERAL
-      this.map.pop();
-    }
-    this.nbUnits /= 2;
-  }
-
-  deces(randNumber){
-    for (let r = 0; r < randNumber; r++){
-      let rand = Math.floor(Math.random() * (this.nbUnits + 1));
-      this.randIni(rand, 0);
-    }
-  }
-
-  reproduction(father, mother, u){ //TO DO
-
-    let tmpVector = [];
-    let r = Math.floor(Math.random() * (2));
-
-    if (r == 0){
-      for (let v = 0; v < Math.floor(this.nbVectors / 2); v ++){
-        tmpVector.push(father[v]);
-      }
-      for (let v = Math.floor(this.nbVectors / 2); v < this.nbVectors; v ++){
-        tmpVector.push(mother[u]);
-      }
-    } else {
-      for (let v = 0; v < Math.floor(this.nbVectors / 2); v ++){
-        tmpVector.push(mother[v]);
-      }
-      for (let v = Math.floor(this.nbVectors / 2); v < this.nbVectors; v ++){
-        tmpVector.push(father[u]);
-      }
-    }
-
-    this.mark[u]=0;
-    for (let v = 0; v < this.nbVectors; v++){
-      this.map[u][v] = tmpVector[v];
-    }
+  }else {
+    console.log("To be implemented")
   }
 }
 
@@ -136,14 +83,72 @@ function selection(units){
   for (let v = 0; v < units.nbVectors; v++){
     sum += units.mark[v];
   }
-  let selected = -1;
+  let selected = 0;
   units.sort();
   let r = Math.floor(Math.random() * (sum + 1));
   while (r > 0){
     selected += 1;
     r -= units.mark[selected];
   }
+  if (r < 0){
+    selected -= 1
+  }
   return(selected);
+}
+
+function reproduction(units, nextUnits, father, mother, u){ //TO DO
+
+  let tmpVector = [];
+  let r = Math.floor(Math.random() * (2));
+  console.log("R", r);
+  console.log("father", father, units.map[father]);
+  console.log("mother", mother, units.map[mother]);
+  if (r == 0){
+    for (let v = 0; v < Math.floor(units.nbVectors / 2); v ++){
+      tmpVector.push(units.map[father][v]);
+    }
+    for (let v = Math.floor(units.nbVectors / 2); v < units.nbVectors; v ++){
+      tmpVector.push(units.map[mother][u]);
+    }
+  } else {
+    for (let v = 0; v < Math.floor(units.nbVectors / 2); v ++){
+      tmpVector.push(units.map[mother][v]);
+    }
+    for (let v = Math.floor(units.nbVectors / 2); v < units.nbVectors; v ++){
+      tmpVector.push(units.map[father][u]);
+    }
+  }
+
+  nextUnits.mark[u]=0;
+  for (let v = 0; v < nextUnits.nbVectors; v++){
+    nextUnits.map[u][v] = tmpVector[v];
+  }
+}
+
+function merge(units, nextUnits){
+  for (let u = units.nbUnits; u < units.nbUnits + nextUnits.nbUnits; u++){
+    units.map.push([]);
+    for (let v = 0; v < units.nbVectors; v++){
+      units.map[u].push(nextUnits.map[u - units.nbUnits][v]);
+    }
+    units.mark[u] = 0;
+  }
+  units.nbUnits += nextUnits.nbUnits;
+}
+
+function eugenisme(units){
+  units.sort();
+  for (let u = units.nbUnits / 2; u < units.nbUnits; u ++){//BE MORE GENERAL
+    units.map.pop();
+  }
+  units.nbUnits /= 2;
+}
+
+function deces(units, randNumber){
+  for (let r = 0; r < randNumber; r++){
+    let rand = Math.floor(Math.random() * (units.nbUnits + 1));
+    randIni(units, rand, 0);
+  }
 }
 
 /**
@@ -166,26 +171,32 @@ function main(nbUnits, time, randNumber, vector, vectorBase) {
   }
 
   for (let u = 0; u < nbUnits; u++){
-    unitsTab.randIni(u, 0);
+    randIni(unitsTab, u, 0);
   }
+  console.log("INI :");
+  console.table(unitsTab.map);
   
   for (let year = 0; year < time; year++){
     for (let unit = 0; unit < nbUnits; unit ++){
       mark(unitsTab, unit);
     }
+    console.log("-------------------- YEAR", year + 1, "--------------------");
+    console.log("---------- > MARK :")
+    console.table(unitsTab.mark);
     let nextUnits = new units(nbUnits, nbVectors, vector);
     for (let u = 0; u < nbUnits; u++){
       let father = selection(unitsTab);
       let mother = selection(unitsTab);
-      nextUnits.reproduction(father, mother, u); 
+      reproduction(unitsTab, nextUnits, father, mother, u); 
+      console.log("CHILD");
+      console.log(nextUnits.map[u]);
     }
     for (let unit = 0; unit < nextUnits.nbUnits; unit ++){
       mark(nextUnits, unit);
     }
-    unitsTab.merge(nextUnits);
-    unitsTab.eugenisme(2);
-    unitsTab.deces(randNumber);
-
+    merge(unitsTab, nextUnits);
+    eugenisme(unitsTab);
+    deces(unitsTab, randNumber);
     let tmp = unitsTab.mark[0];
     let tmp2 = 0;
     for (let u = 0; u < nbUnits; u++){
@@ -198,14 +209,16 @@ function main(nbUnits, time, randNumber, vector, vectorBase) {
     for (let i = 0; i < nbVectors; i++){
       solution[i]= unitsTab.map[tmp2][i];
     }
+    console.log("---------- > NEW MAP :");
+    console.table(unitsTab.map);
   }
   return(solution);
 }
 
 let vector = [1,0,0,1];
 let vectorBase = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]];
-let nbUnits = 5;
-let time = 2;
+let nbUnits = 100;
+let time = 100;
 let randNumber = 0;
 
 let solution = main (nbUnits, time, randNumber, vector, vectorBase);
