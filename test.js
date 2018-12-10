@@ -1,8 +1,5 @@
 import { main } from './main.js';
 
-
-
-/*
 let vector = [0, 1, 1, 0, 0, 0];
 let vectorBase = [
   [1, 0, 0, 0, 0, 0],
@@ -10,8 +7,8 @@ let vectorBase = [
   [1, 1, 1, 0, 0, 0],
   [1, 1, 1, 1, 0, 0]
 ];
-*/
 
+/*
 let vector = [0, 1, 1, 0, 0, 0, 0, 0, 0, 0];
 let vectorBase = [
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -24,13 +21,13 @@ let vectorBase = [
   [1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-];
+]; */
 
 /*
 let vector = [1, 0 , 0 ,1];
 let vectorBase= [[1, 0 , 0 ,0],[0, 1 , 0 ,0],[0, 0 , 1 ,0],[0, 0 , 0 ,1]]; */
 
-let nbUnits = 100;
+let nbUnits = 20;
 let time = 10000;
 
 let solution = main(nbUnits, time, vector, vectorBase);
